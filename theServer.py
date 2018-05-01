@@ -6,6 +6,8 @@ Usage::
 """
 
 import time
+import os
+import fnmatch
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 HOST_NAME = ''
@@ -19,11 +21,26 @@ class ThisHandler(BaseHTTPRequestHandler):
 
   def do_GET(self):
     paths = {
-      '/status': {'status':200}
+      '/status': {'status':200}, 
+      '/images': {'status':200}
     }
 
+    if self.path == '/images':
+      imagefiles = []
+      for filename in os.listdir(os.getcwd()):
+        if fnmatch.fnmatch(filename, '*.jpg'):
+          imagefiles.append('<a href="uas-at-fgcu.com/' + filename + '"></a>')
+      imagefiles.sort()
+      self.wfile.write('!DOCTYPE html>   <html lang="en">    <title>UAS at FGCU </title>    <meta name="viewport" content="width=device-width, initial-scale=1">    <link rel="stylesheet" href="https://unpkg.com/tachyons/css/tachyons.min.css">    <body>     <header class="bg-black-90 fixed w-100 ph3 pv3 pv4-ns ph4-m ph5-l">      <nav class="f6 fw6 ttu tracked">       <a class="link dim white dib mr3" href="http://arduino.fgcu.edu/" title="Home">Arduino at FGCU Home</a>      </nav>     </header>      <section class="flex-ns vh-100 items-center">        '
+		      + imagefiles + '<a class="f6 grow no-underline br-pill ba bw1 ph3 pv2 mb2 dib black" href="uas-at-fgcu.com/images">           View Images         </a>        </div>      </section>     <footer class="pv4 ph3 ph5-m ph6-l mid-gray">      <small class="f6 db tc">Ã‚Â© 2018 <b class="ttu">Software Engineering at Florida Gulf Coast University</b>., All Rights Reserved</small>     </footer>    </body>  </html>    ')
     if self.path in paths:
       self.respond(paths[self.path])
+    elif self.path.endswith(".jpg"):
+      f = open(self.path, 'rb')
+      self.send_header('Content-type', 'image/png')
+      self.end_headers()
+      self.wfile.write(f.read())
+      f.close()
     else:
       file_handler = open('index.html', 'rb')
       response_content = file_handler.read()
