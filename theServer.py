@@ -31,7 +31,7 @@ class ThisHandler(BaseHTTPRequestHandler):
         if fnmatch.fnmatch(filename, '*.jpg'):
           imagefiles.append('<a href="uas-at-fgcu.com/' + filename + '"></a><br>')
       if not imagefiles:
-	imagestr = ''
+	imagestr = ' '
       else:
 	imagestr = ''.join(map(str,imagefiles.sort()))
       self.respond({'status':200, 'content': '!DOCTYPE html>   <html lang="en">    <title>UAS at FGCU </title>    <meta name="viewport" content="width=device-width, initial-scale=1">    <link rel="stylesheet" href="https://unpkg.com/tachyons/css/tachyons.min.css">    <body>     <header class="bg-black-90 fixed w-100 ph3 pv3 pv4-ns ph4-m ph5-l">      <nav class="f6 fw6 ttu tracked">       <a class="link dim white dib mr3" href="http://arduino.fgcu.edu/" title="Home">Arduino at FGCU Home</a>      </nav>     </header>      <section class="flex-ns vh-100 items-center">        '
