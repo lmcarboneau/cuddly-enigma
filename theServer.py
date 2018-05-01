@@ -28,6 +28,8 @@ class ThisHandler(BaseHTTPRequestHandler):
       file_handler = open('index.html', 'rb')
       response_content = file_handler.read()
       file_handler.close()
+      response_content = "".join(map(chr,response_content)).replace('\n', ' ').replace('\r', ' ').replace('b\'','')
+      
       self.respond({'status':200, 'content':response_content})
 
   def do_PUT(self):
