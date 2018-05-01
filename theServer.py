@@ -25,7 +25,10 @@ class ThisHandler(BaseHTTPRequestHandler):
     if self.path in paths:
       self.respond(paths[self.path])
     else:
-      self.respond({'status':500})
+      file_handler = open('index.html', 'rb')
+      response_content = file_handler.read()
+      file_handler.close()
+      self.respond({'status':200, 'content':response_content})
 
   def do_PUT(self):
     content_length = int(self.headers['Content-length'])
