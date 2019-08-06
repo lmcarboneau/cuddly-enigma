@@ -1,30 +1,136 @@
 <!DOCTYPE html>
- <html lang="en">
-  <title>UAS at FGCU </title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://unpkg.com/tachyons/css/tachyons.min.css">
-  <body>
-   <header class="bg-black-90 fixed w-100 ph3 pv3 pv4-ns ph4-m ph5-l">
-    <nav class="f6 fw6 ttu tracked">
-     <a class="link dim white dib mr3" href="http://arduino.fgcu.edu/" title="Home">Arduino at FGCU Home</a>
-    </nav>
-   </header>
-    <section class="flex-ns vh-100 items-center">
-      <div class="mw6 ph5">
-      </div>
-      <div class="tc tl-ns ph3">
-        <h1 class="f3 f1-l fw2 mb3 mt4 mt0-ns">Connect to the UAS!</h1>
-        <a class="f6 grow no-underline br-pill ba bw1 ph3 pv2 mb2 dib black" href="/demo">
-         Start the Demo
-       </a>
-       <a class="f6 grow no-underline br-pill ba bw1 ph3 pv2 mb2 dib black" href="/images">
-         View Images
-       </a>
-      </div>
-    </section>
-   <footer class="pv4 ph3 ph5-m ph6-l mid-gray">
-    <small class="f6 db tc">© 2018 <b class="ttu">Software Engineering at Florida Gulf Coast University</b>., All Rights Reserved</small>
-   </footer>
-  </body>
-</html>
+<html lang="en">
 
+<head>
+    <title>FGCU UAS Dashboard</title>
+    <meta charset="utf-8">
+    <meta name="description" content="Dashboard - Florida Gulf Coast University Department
+        of Software Engineering Unmanned Aerial System">
+    <meta name="designer" content="Lindsey Carboneau">
+    <meta name="author" content="Lindsey Carboneau">
+    <meta name="shortcut icon" href="./img/favicon.ico">
+    <!-- TODO: update with acutal favicon name/path -->
+    
+    <!-- Tachyons CSS resources -->
+    <!-- <link rel="stylesheet" href="https://unpkg.com/tachyons@4.7.0/css/tachyons.min.css"/> -->
+    <link rel="stylesheet" href="./css/tachyons.min.css"/>
+    
+</head>
+
+<header class="bg-black-90 w-100 ph3 pv3 pv4-ns ph4-m ph5-l">
+    <nav class="f6 fw6 ttu tracked">
+        <a class="link dim white dib mr3" href="#" title="UAS Dashboard">FGCU Unmanned Aerial System Dashboard</a>
+        <a class="link dim gray dib" href="arduino.fgcu.edu" title="Arduino Home">Arduino Home</a>
+    </nav>
+</header>
+
+<body class="w-100 serif">
+    <!-- placeholder -->
+      
+    
+    <!-- Two columns on page; col 1: buttons and information display; col 2: live/lastest image from camera-->
+
+    <!-- primary container with screen padding -->
+    <div class="ph3 ph5-ns">
+        <!-- container with centering parameters -->
+        <div class="cf mw9 center tc-m">
+            <!-- spacing container -->
+            <div class="fl w-100 overflow-auto v-top">
+
+                <!-- Column 1 -->
+                <div class="pb3 pb4-ns pt4 pt5-ns mt4 black-70 fl-l w-50-l">
+                    <h1 class="f4 fw6 f1-ns lh-title measure mt0">
+                        Welcome to the UAS Dashboard
+                    </h1>
+                    <p class="f5 f4-ns fw4 b measure dib-m lh-copy">
+                        This page allows remote access to the UAS SoC and Camera feed.<br>
+                        Changes made via the Dashboard may require several seconds to take effect - Please be patient!
+                        <br>
+                    </p>
+
+                    <!-- Gallery navigation button -->
+                    <a class="f6 link dim br3 ba bw1 ph3 pv2 mb2 dib black" href="./gallery.html">View Image Gallery</a>
+
+                    <!-- Status information display -->
+                    <ul class="list pl0 mt4 mb5 measure center">
+                        <li class="flex items-center lh-copy pa3 ph0-l bb b--black-10">
+                            <div class="pl3 flex-auto">
+                                <span class="f3 db black-70">Current Status</span>
+                            </div>
+                            <div>
+                                <span class="f3 link blue hover-dark-gray">Disconnected</span>
+                            </div>
+                        </li>
+                        <li class="flex items-center lh-copy pa3 ph0-l bb b--black-10">
+                            <div class="pl3 flex-auto">
+                                <span class="f3 db black-70">Current Settings</span>
+                            </div>
+                            <div>
+                                <span class="f3 link blue hover-dark-gray">Default</span>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <!-- Camera restart button and options dropdown -->
+                    <a class="f6 link dim br3 ba bw1 ph3 pv2 mb2 dib black" href="#0">Restart Camera</a>
+                    <select id="types" class="w-40 h2 f6 bg-white ba b--sliver gray" name="">
+                        <option value="">Options</option>
+                        <option label="Default" value="2">Default </option>
+                        <option label="Night-Mode" value="3">Night Mode </option>
+                    </select>
+
+                    <!-- Sensor info & button -->
+                    <article class="fl w-100">
+                        <div class="pa3 pa5-ns items-center flex-auto fl w-50">
+                            <h4 class="f4 fw6 bb">Sensors</h4>
+                            <dl class="f6 lh-title mv2">
+                                <dt class="dib b">Temperature:  </dt>
+                                <dd class="dib ml0 gray">72.2 F</dd>
+                            </dl>
+                            <dl class="f6 lh-title mv2">
+                                <dt class="dib b">Humidity:  </dt>
+                                <dd class="dib ml0 gray">47 %</dd>
+                            </dl>
+                            <dl class="f6 lh-title mv2">
+                                <dt class="dib b">Altitude:  </dt>
+                                <dd class="dib ml0 gray">18.7 m</dd>
+                            </dl>
+                            <!-- restart button -->
+                            <a class="f6 link dim br3 ba bw1 ph3 pv2 mb2 dib white bg-light-red" href="#0">Restart System</a>
+                        </div>
+
+                    </article>
+
+                </div> <!-- end of column 1 -->
+
+                <!-- Column 2 -->
+                <div class="fl-l w-50-l tl tc-ns pt3 pt4-m pt6-l">
+                    <!-- forces to right or bottom on small screens; change size e.g. width="50%" -->
+                    <img src="img/latest.jpg" >
+                    <li class="flex items-center pa3 b--black-10">
+                        <div class="flex-auto">
+                            <span class="f5 black-70">Last Updated:</span>
+                        </div>
+                        <div>
+                            <span class="f5 black-70">##</span>
+                        </div>
+                    </li>
+                </div>
+
+            </div> <!--spacing-->
+        </div> <!--centering-->
+    </div> <!--padding-->
+
+</body>
+
+<footer class="pv4 ph3 ph5-m ph6-l mid-gray">
+        <div class="tr mt3">
+          <ul style="list-style: none;">
+            <li><a href="http://www.fgcu.edu" class="f7 dib ph2 link blue dim">Florida Gulf Coast University</a></li>
+            <li><a href="https://www.fgcu.edu/eng/softwareengineering/" class="f7 dib ph2 link blue dim">FGCU Department of Software Engineering</a></li>
+          </ul>
+          <small class="f7 db tc">© 2019 FGCU Software Engineering</small>
+        </div>
+    </footer>
+
+</html>
