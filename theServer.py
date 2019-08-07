@@ -1,51 +1,84 @@
 #!/usr/bin/env python3
 """
-Very simple HTTP server in python for logging requests
+Very simple HTTP server in python for requests
 Usage::
-    ./theServer.py [<port>]
+	./theServer.py
 """
-import http.server 
-import SocketServer
-import logging
 
+import time
+import os
+import fnmatch
+from http.server import BaseHTTPRequestHandler, HTTPServer
 
-class S(BaseHTTPRequestHandler):
-    def _set_response(self):
-        self.send_response(200)
-        self.send_header('Content-type', 'application/json; charset=utf-8')
-        self.end_headers()
+HOST_NAME = ''
+PORT_NUMBER = 80
 
-    def do_GET(self):
-        logging.info("GET request,\nPath: %s\nHeaders:\n%s\n", str(self.path), str(self.headers))
-        self._set_response()
-        self.wfile.write("GET request for {}".format(self.path).encode('utf-8'))
+class ThisHandler(BaseHTTPRequestHandler):
+  def do_HEAD(self):
+    self.send_response(200)
+    self.send_header('Content-type', 'application/json; charset=utf-8')
+    self.end_headers()
 
-    def do_POST(self):
-        content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
-        post_data = self.rfile.read(content_length) # <--- Gets the data itself
-        logging.info("POST request,\nPath: %s\nHeaders:\n%s\n\nBody:\n%s\n",
-                str(self.path), str(self.headers), post_data.decode('utf-8'))
-        with open('this.jpg', 'wb') as output_file:
-            output_file.write(post_data)
+  def do_GET(self):
+    paths = {
+      '/status': {'status':200}, 
+      '/images': {'status':200}
+    }
 
-        self._set_response()
-        self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
+    if self.path == '/images':
+      imagefiles = []
+      for filename in os.listdir(os.getcwd()):
+        if fnmatch.fnmatch(filename, '*.jpg'):
+          imagefiles.append('<a href="uas-at-fgcu.com/' + filename + '"></a><br>')
+      if not imagefiles:
+        imagestr = 'No images found'
+      else:
+	imagestr = ''.join(map(str,imagefiles.sort()))
+      self.respond({'status':200, 'content': '<!DOCTYPE html>   <html lang="en">    <title>UAS at FGCU </title>    <meta name="viewport" content="width=device-width, initial-scale=1">    <link rel="stylesheet" href="https://unpkg.com/tachyons/css/tachyons.min.css">    <body>     <header class="bg-black-90 fixed w-100 ph3 pv3 pv4-ns ph4-m ph5-l">      <nav class="f6 fw6 ttu tracked">       <a class="link dim white dib mr3" href="http://arduino.fgcu.edu/" title="Home">Arduino at FGCU Home</a>      </nav>     </header>      <section class="flex-ns vh-100 items-center">        '
+		      + imagestr + '<a class="f6 grow no-underline br-pill ba bw1 ph3 pv2 mb2 dib black" href="/">           Return         </a>        </div>      </section>     <footer class="pv4 ph3 ph5-m ph6-l mid-gray">      <small class="f6 db tc">Ã‚Â© 2018 <b class="ttu">Software Engineering at Florida Gulf Coast University</b>., All Rights Reserved</small>     </footer>    </body>  </html>    '})
+    if self.path in paths:
+      self.respond(paths[self.path])
+    elif self.path.endswith(".jpg"):
+      f = open(self.path, 'rb')
+      self.send_header('Content-type', 'image/png')
+      self.end_headers()
+      self.wfile.write(f.read())
+      f.close()
+    else:
+      file_handler = open('index.html', 'rb')
+      response_content = file_handler.read()
+      file_handler.close()
+      response_content = "".join(map(chr,response_content)).replace('\n', ' ').replace('\r', ' ').replace('b\'','')
 
-def run(server_class=HTTPServer, handler_class=S, port=8080):
-    logging.basicConfig(level=logging.INFO)
-    logging.info('Starting httpd...\n')
-    with SocketServer.TCPServer(("", port), handler_class) as httpd:
-        try:
-            httpd.serve_forever()
-        except KeyboardInterrupt:
-            pass
-    httpd.server_close()
-    logging.info('Stopping httpd...\n')
+      self.respond({'status':200, 'content':response_content})
+
+  def do_PUT(self):
+    content_length = int(self.headers['Content-length'])
+    post_data = self.rfile.read(content_length)
+
+    self.respond({'status':503, 'content': post_data})
+
+  def handle_http(self, status_code, content = ''):
+    self.send_response(status_code)
+    self.send_header('Content-type', 'text/html')
+    self.end_headers()
+    content = '{}'.format(content)
+    return bytes(content, 'UTF-8')
+
+  def respond(self, opts):
+    if 'content' in opts:
+      response = self.handle_http(opts['status'], opts['content'])
+    else:
+      response = self.handle_http(opts['status'])
+    self.wfile.write(response)
 
 if __name__ == '__main__':
-    from sys import argv
-
-    if len(argv) == 2:
-        run(port=int(argv[1]))
-    else:
-        run()
+  server_class = HTTPServer
+  httpd = server_class((HOST_NAME, PORT_NUMBER), ThisHandler)
+  print(time.asctime(), 'Server Starts - %s:%s' % (HOST_NAME, PORT_NUMBER))
+  try:
+    httpd.serve_forever()
+  except KeyboardInterrupt:
+    pass
+  httpd.server_close()
+  print(time.asctime(), 'Server Stops - %s:%s' % (HOST_NAME, PORT_NUMBER))
